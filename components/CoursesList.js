@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Platform, SafeAreaView, View, Image, TextInput, FlatList } from 'react-native';
 
-import Course from './Course';
-import Header from './Header.android';
+import Course from 'components/Course';
+import Header from 'components/Header.android';
 
 const data = [
     { title: 'Web Application Programming', faculty: 'Asaad Saad', code: 'CS472', rating: 4 },
@@ -16,6 +16,12 @@ const data = [
 ];
 
 export default function CoursesList() {
+    const [courses, setCourses] = React.useState([])
+    const [search, setSearch] = React.useState('')
+    /**fetching will be done here */
+    React.useEffect(() => {
+        setCourses(data)
+    })
     return (
         <SafeAreaView
             style={{
@@ -26,9 +32,18 @@ export default function CoursesList() {
             }}>
             <View>
                 <Header />
-                <FlatList 
-                data={data} renderItem= {({item})=> <Course data={item} />}
-                />               
+                <TextInput
+                    placeholder='Live Search'
+                    onChangeText={text => setSearch(text)}
+                    value={search}
+                    style={styles.input}
+                />
+                <FlatList
+                    data={courses.filter(course => {
+                        return course.title.toLowerCase().indexOf(search.toLowerCase()) >-1
+                    })}
+                    renderItem={({ item, index }) => <Course data={{ ...item, index }} />}
+                    keyExtractor={course => course.code} />
             </View >
         </SafeAreaView>
     );

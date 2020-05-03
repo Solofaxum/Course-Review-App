@@ -3,18 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import Stars from './Stars'
 
-const CourseDetails = (props) => {
-  const course = props.route.params.course;
+const CourseDetails = ({route: {params}, navigation:{navigate}}) => {
+  const course = params.course;
 const addReview = () => {
-  const navigation = useNavigation();
-  return (
-    <Button title="Course List Page?"
-      onPress={() => navigation('COURSELIST')}
-    />
-  );
+  navigate('ADDREVIEW', {course})
 }
   return (
     <ScrollView style={styles.root}>
+      <View>
       <View style={styles.infoHeader}>
         <Text style={styles.name}>{course.title}</Text>
         <Text style={styles.faculty}>{course.code}</Text>
@@ -23,6 +19,7 @@ const addReview = () => {
         <TouchableOpacity style={styles.button} onPress={addReview}>
           <Text style={styles.buttonText}>Add Review</Text>
         </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

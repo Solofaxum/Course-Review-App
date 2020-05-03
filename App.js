@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
-import About from './components/About';
+import About from 'components/About';
 import AddReview from './components/AddReview';
 import CourseDetails from './components/CourseDetails';
 import CourseList from './components/CoursesList';
@@ -18,9 +18,9 @@ const Tabs = createBottomTabNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator style={styles.container} initialRouteName='COURSELIST'>
-      <Stack.Screen name="COURSELIST" component={CourseList} />
-      <Stack.Screen name="CORSEDETAILS" component={CourseDetails} />
-      <Stack.Screen name="ADDREVIEW" component={AddReview} />
+      <Stack.Screen name="COURSELIST" component={CourseList} options={{title:'Course List', headerShown:false}}/>
+      <Stack.Screen name="CORSEDETAILS" component={CourseDetails} options={{title:'Course Details'}}/>
+      <Stack.Screen name="ADDREVIEW" component={AddReview} options={{title:'Add Review'}}/>
     </Stack.Navigator>
   )
 }

@@ -8,10 +8,9 @@ import Stars from 'components/Stars';
 const Course = ({ data }) => {
   const { index, title, faculty, code, rating } = data;
   
-  const navigation = useNavigation();
-  const infoPressed = (data) => {
-    navigation.navigate('CORSEDETAILS', {course: data})
-
+  const {navigate} = useNavigation();
+  const infoPressed = () => {
+    navigate('CORSEDETAILS', {course: data})
   }
 
   return (

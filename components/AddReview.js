@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   View,
   Text,
@@ -7,13 +7,85 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { createIconSetFromFontello } from '@expo/vector-icons';
 
-const AddReview = () => {
+const AddReview = ({navigation: {navigate}}) => {
+  const [review, setReview] = React.useState(
+    [{
+      name: '', rating: 0, comment: '', submtting: false
+    }])
+ 
+    React.useEffect(()=>{
+      readReviewName();
+    }, []);
+    const readReviewName =async () => {
+      try{
+        const name= await AsyncStorage.getItem('reviewer_name');
+        if(name) setReview({...review, name});
+      } catch (e) {
+        console.log(e)
+      }
+    }
 
-  return (null);
+const saveReviewerName = async () => {
+  try{
+    await AsyncStorage.setItem('reviewer_name', review.name);
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+  const submitReview = () => {
+    setReview({ ...review, submtting: true })
+    saveReviewerName();
+    setTimeout(()=> navigate ('COURSELIST'),3000)
+  }
+  return (
+    <KeyboardAwareScrollView style={{ flex: 1 }}>
+      <View style={styles.root}>
+        <Text style={styles.addReview}>Add Review</Text>
+        <TextInput
+          placeholder='Name (optional)'
+          value={review.name}
+          onChangeText={name => setReview({ ...review, name })}
+          style={styles.input}
+          autoCorrect ={false}
+        />
+        <Text style={styles.rating}>Your Rating</Text>
+        <View style={styles.stars}>
+          {[1, 2, 3, 4, 5].map(i => {
+            return (
+              <TouchableOpacity
+                onPress={() => setReview({ ...review, rating: i })}
+                style={styles.starButton}
+                key={i}>
+                <Icon name='star' size={40}
+                  color={i <= review.rating ? '#FFD64C' : '#CCCCCC'}
+                />
+              </TouchableOpacity>
+            )
+          })}
+          </View>
+          <TextInput
+            placeholder='Review'
+            value={review.comment}
+            onChangeText={comment => setReview({ ...review, comment })}
+            style={[styles.input, {hight: 100}]}
+            textAlignVertical= 'top'
+            numberOfLines={4}
+            autoCorrect ={false} />
+          <TouchableOpacity style={styles.submitButton}
+            onPress={submitReview}>
+            <Text style={styles.submitButtonText}>Submit Review</Text>
+          </TouchableOpacity>
+          {review.submtting && <ActivityIndicator size='large' color='#0066CC' style={{padding: 10}}/>}
+      </View>
+    </KeyboardAwareScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -35,7 +107,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 10,
     marginHorizontal: 20,
-    borderColor: '#ccc',
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 3,
   },
@@ -43,10 +115,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'grey',
     textAlign: 'center',
-    marginVertical: 40,
+    marginVertical: 20,
   },
   stars: {
-    marginBottom: 80,
+    marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -58,14 +130,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#0066cc',
     borderRadius: 4,
-    marginVertical: 10,
+    marginVertical: 5,
     marginHorizontal: 20,
   },
   submitButtonText: {
     fontSize: 18,
     color: '#ffffff',
     textAlign: 'center',
-  },
+  }
 });
 
 export default AddReview;
