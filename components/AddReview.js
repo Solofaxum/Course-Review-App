@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createIconSetFromFontello } from '@expo/vector-icons';
+
 
 const AddReview = ({navigation: {navigate}}) => {
   const [review, setReview] = React.useState(
